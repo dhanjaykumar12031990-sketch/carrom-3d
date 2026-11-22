@@ -13,7 +13,7 @@ android {
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
-    applicationId = "com.princekumar.carromroyale3d"
+    applicationId = "com.aistudio.carrom3d.vmqrzx"
     minSdk = 24
     targetSdk = 36
     versionCode = 1
