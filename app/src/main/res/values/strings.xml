@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Carrom 3D</string>
+    <string name="splash_title">CARROM ROYALE 3D</string>
+    <string name="splash_subtitle">ROYAL WOOD • TACTICAL AI • 100% OFFLINE</string>
+    <string name="splash_loading">PREPARING ROYAL BOARD…</string>
+    <string name="splash_tap_enter">TAP TO ENTER</string>
+
+    <string name="lobby_tab_play">Lobby</string>
+    <string name="lobby_tab_shop">Shop</string>
+    <string name="lobby_tab_rewards">Rewards</string>
+    <string name="lobby_drag_hint">Drag 3D Stage to Rotate • Equipped: %1$s</string>
+
+    <string name="mode_classic_title">Classic 1v1</string>
+    <string name="mode_classic_desc">Tactical human-like AI &amp; official rules</string>
+    <string name="mode_chaos_title">Chaos Trick Arena</string>
+    <string name="mode_chaos_desc">Dynamic bumpers, speed pads &amp; deflectors</string>
+    <string name="mode_desi_title">4-Player Desi Adda</string>
+    <string name="mode_desi_desc">Offline 2v2 Teams or 4P Free-For-All</string>
+    <string name="mode_challenges_title">50 Trick-Shot Challenges</string>
+    <string name="mode_challenges_desc">%1$d/50 cleared • Precision puzzles</string>
+
+    <string name="shop_strikers">ROYAL STRIKERS</string>
+    <string name="shop_boards">LUXURY BOARDS</string>
+    <string name="daily_spin_title">ROYAL FORTUNE WHEEL</string>
+    <string name="daily_spin_ready">Spin once daily for bonus Royal Coins!</string>
+    <string name="daily_spin_claimed">Today\'s reward claimed! Come back tomorrow.</string>
+    <string name="btn_spin_now">SPIN WHEEL</string>
+
+    <string name="settings_title">GAME SETTINGS</string>
+    <string name="setting_sound">Sound Effects</string>
+    <string name="setting_music">Ambient Royal Music</string>
+    <string name="setting_sensitivity">Camera &amp; Aim Sensitivity</string>
+    <string name="setting_ai_difficulty">Tactical AI Skill</string>
+    <string name="profile_edit_title">PLAYER PROFILE</string>
+
+    <string name="btn_resume">Resume Active Match</string>
+    <string name="btn_play_again">Play Again</string>
+    <string name="btn_next_challenge">Next Challenge</string>
+    <string name="btn_main_menu">Back to Lobby</string>
+    <string name="queen_pending_banner">QUEEN PENDING COVER!</string>
+    <string name="hint_default">Slide to position striker • Drag back to aim &amp; shoot</string>
+    <string name="hint_cancel">Drag further back to charge • Release inside ring to cancel</string>
+    <string name="match_complete">MATCH COMPLETE</string>
+    <string name="new_high_score_badge">NEW HIGH SCORE!</string>
+    <string name="label_you">YOU</string>
+    <string name="label_ai">TACTICAL AI</string>
+    <string name="label_player_1">P1</string>
+    <string name="label_player_2">P2</string>
+    <string name="label_equipped">EQUIPPED</string>
+    <string name="label_unlocked">EQUIP</string>
+    <string name="turn_your">YOUR TURN</string>
+    <string name="turn_ai_thinking">AI THINKING…</string>
+    <string name="turn_shot_in_play">SHOT IN PLAY</string>
+    <string name="turn_rewinding">REWINDING…</string>
+    <string name="cd_camera_toggle">Switch between 3D angled view and top-down precision view</string>
+    <string name="cd_sound_toggle">Toggle sound effects</string>
+    <string name="cd_menu_button">Return to lobby</string>
+    <string name="cd_settings_button">Open settings</string>
+    <string name="cd_rewind_button">Rewind last shot once per match</string>
+    <string name="cd_striker_slider">Position striker along baseline</string>
+</resources>

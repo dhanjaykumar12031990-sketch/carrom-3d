@@ -1,0 +1,6 @@
+{
+  "name": "Carrom 3D",
+  "description": "Offline 3D Carrom board game with studio lighting, soft shadows, realistic physics, Smart AI, and 2-player Pass & Play.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

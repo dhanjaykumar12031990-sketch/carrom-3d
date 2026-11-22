@@ -1,0 +1,171 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Cloud-synced Carrom Royale 3D player profile, wallet, unlocks, and progression.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the profile owner."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Player display name shown in the lobby and scoreboard."
+        },
+        "email": {
+          "type": "string",
+          "description": "Authenticated user's email address (strictly private to owner)."
+        },
+        "avatarId": {
+          "type": "integer",
+          "description": "Selected royal avatar crest index (0..5)."
+        },
+        "coins": {
+          "type": "integer",
+          "description": "Total royal gold coins owned by the player."
+        },
+        "highScore": {
+          "type": "integer",
+          "description": "Highest single-match score."
+        },
+        "careerPoints": {
+          "type": "integer",
+          "description": "Total career XP points determining player level."
+        },
+        "matchesWon": {
+          "type": "integer",
+          "description": "Total matches won."
+        },
+        "matchesPlayed": {
+          "type": "integer",
+          "description": "Total matches played."
+        },
+        "selectedStrikerId": {
+          "type": "string",
+          "description": "Currently equipped striker skin ID."
+        },
+        "unlockedStrikerIds": {
+          "type": "array",
+          "description": "Unlocked striker skin IDs."
+        },
+        "selectedBoardId": {
+          "type": "string",
+          "description": "Currently equipped board finish ID."
+        },
+        "unlockedBoardIds": {
+          "type": "array",
+          "description": "Unlocked board finish IDs."
+        },
+        "highestChallengeUnlocked": {
+          "type": "integer",
+          "description": "Highest unlocked trick-shot challenge level (1..50)."
+        },
+        "completedChallenges": {
+          "type": "array",
+          "description": "Completed trick-shot challenge level numbers."
+        },
+        "lastSpinEpochDay": {
+          "type": "integer",
+          "description": "UTC epoch day of the player's last Daily Wheel claim."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of initial profile creation (FieldValue.serverTimestamp())."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of latest profile sync (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "displayName",
+        "email",
+        "avatarId",
+        "coins",
+        "highScore",
+        "careerPoints",
+        "matchesWon",
+        "matchesPlayed",
+        "selectedStrikerId",
+        "unlockedStrikerIds",
+        "selectedBoardId",
+        "unlockedBoardIds",
+        "highestChallengeUnlocked",
+        "completedChallenges",
+        "lastSpinEpochDay",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MatchRecord": {
+      "title": "MatchRecord",
+      "description": "Immutable history entry for a completed Carrom match or trick-shot challenge.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the player."
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "CLASSIC_1V1",
+            "CHAOS_ARENA",
+            "DESI_ADDA_2V2",
+            "DESI_ADDA_FFA",
+            "TRICK_CHALLENGE"
+          ],
+          "description": "Game mode identifier."
+        },
+        "playerScore": {
+          "type": "integer",
+          "description": "Score achieved in this match."
+        },
+        "won": {
+          "type": "boolean",
+          "description": "Whether the player won this match."
+        },
+        "challengeLevel": {
+          "type": "integer",
+          "description": "Challenge level (1..50) for TRICK_CHALLENGE, or 0 otherwise."
+        },
+        "coinsEarned": {
+          "type": "integer",
+          "description": "Gold coins awarded from this match."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when match completed (FieldValue.serverTimestamp())."
+        }
+      },
+      "required": [
+        "userId",
+        "mode",
+        "playerScore",
+        "won",
+        "challengeLevel",
+        "coinsEarned",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Per-user private player profile, wallet, unlocks, and career stats."
+    },
+    "/users/{userId}/matches/{matchId}": {
+      "schema": {
+        "$ref": "#/entities/MatchRecord"
+      },
+      "description": "Per-user immutable match history subcollection."
+    }
+  }
+}

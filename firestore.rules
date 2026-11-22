@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidGameMode(mode) {
+      return mode in ['CLASSIC_1V1', 'CHAOS_ARENA', 'DESI_ADDA_2V2', 'DESI_ADDA_FFA', 'TRICK_CHALLENGE'];
+    }
+
+    function isValidUserProfile(data, expectedUid) {
+      return data.userId is string && data.userId == expectedUid &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 30 &&
+             data.email is string && data.email.size() <= 120 &&
+             data.avatarId is int && data.avatarId >= 0 && data.avatarId <= 5 &&
+             data.coins is int && data.coins >= 0 && data.coins <= 10000000 &&
+             data.highScore is int && data.highScore >= 0 && data.highScore <= 1000000 &&
+             data.careerPoints is int && data.careerPoints >= 0 && data.careerPoints <= 100000000 &&
+             data.matchesWon is int && data.matchesWon >= 0 && data.matchesWon <= 1000000 &&
+             data.matchesPlayed is int && data.matchesPlayed >= 0 && data.matchesPlayed <= 1000000 &&
+             data.selectedStrikerId is string && data.selectedStrikerId.size() >= 1 && data.selectedStrikerId.size() <= 40 &&
+             data.unlockedStrikerIds is list && data.unlockedStrikerIds.size() >= 1 && data.unlockedStrikerIds.size() <= 20 &&
+             data.unlockedStrikerIds[0] is string &&
+             data.selectedBoardId is string && data.selectedBoardId.size() >= 1 && data.selectedBoardId.size() <= 40 &&
+             data.unlockedBoardIds is list && data.unlockedBoardIds.size() >= 1 && data.unlockedBoardIds.size() <= 20 &&
+             data.unlockedBoardIds[0] is string &&
+             data.highestChallengeUnlocked is int && data.highestChallengeUnlocked >= 1 && data.highestChallengeUnlocked <= 50 &&
+             data.completedChallenges is list && data.completedChallenges.size() <= 50 &&
+             (data.completedChallenges.size() == 0 || data.completedChallenges[0] is int) &&
+             data.lastSpinEpochDay is int && data.lastSpinEpochDay >= -1 && data.lastSpinEpochDay <= 1000000;
+    }
+
+    function isValidMatchRecord(data, expectedUid) {
+      return data.userId is string && data.userId == expectedUid &&
+             data.mode is string && isValidGameMode(data.mode) &&
+             data.playerScore is int && data.playerScore >= 0 && data.playerScore <= 10000 &&
+             data.won is bool &&
+             data.challengeLevel is int && data.challengeLevel >= 0 && data.challengeLevel <= 50 &&
+             data.coinsEarned is int && data.coinsEarned >= 0 && data.coinsEarned <= 10000 &&
+             data.createdAt is timestamp && data.createdAt <= request.time;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if isOwner(userId);
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'displayName', 'email', 'avatarId', 'coins',
+                         'highScore', 'careerPoints', 'matchesWon', 'matchesPlayed',
+                         'selectedStrikerId', 'unlockedStrikerIds', 'selectedBoardId',
+                         'unlockedBoardIds', 'highestChallengeUnlocked',
+                         'completedChallenges', 'lastSpinEpochDay', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'displayName', 'email', 'avatarId', 'coins',
+                         'highScore', 'careerPoints', 'matchesWon', 'matchesPlayed',
+                         'selectedStrikerId', 'unlockedStrikerIds', 'selectedBoardId',
+                         'unlockedBoardIds', 'highestChallengeUnlocked',
+                         'completedChallenges', 'lastSpinEpochDay', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().createdAt is timestamp && incoming().createdAt <= request.time &&
+                       incoming().updatedAt is timestamp && incoming().updatedAt <= request.time &&
+                       isValidUserProfile(incoming(), userId);
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidUserProfile(incoming(), userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().updatedAt is timestamp && incoming().updatedAt <= request.time &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'displayName', 'email', 'avatarId', 'coins',
+                         'highScore', 'careerPoints', 'matchesWon', 'matchesPlayed',
+                         'selectedStrikerId', 'unlockedStrikerIds', 'selectedBoardId',
+                         'unlockedBoardIds', 'highestChallengeUnlocked',
+                         'completedChallenges', 'lastSpinEpochDay', 'updatedAt'
+                       ]);
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /matches/{matchId} {
+        allow get: if isOwner(userId) && isValidId(userId) && isValidId(matchId);
+        allow list: if isOwner(userId) && isValidId(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(userId) &&
+                         isValidId(matchId) &&
+                         incoming().keys().hasAll([
+                           'userId', 'mode', 'playerScore', 'won',
+                           'challengeLevel', 'coinsEarned', 'createdAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'mode', 'playerScore', 'won',
+                           'challengeLevel', 'coinsEarned', 'createdAt'
+                         ]) &&
+                         isValidMatchRecord(incoming(), userId);
+
+        allow update: if false;
+        allow delete: if isOwner(userId) && isValidId(userId) && isValidId(matchId);
+      }
+    }
+  }
+}
